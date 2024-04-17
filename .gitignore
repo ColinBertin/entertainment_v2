@@ -1,4 +1,4 @@
 server/node_modules
 server/config.env
 server/config.env.test
-server/.vercel
+server/vercel
