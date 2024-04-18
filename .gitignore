@@ -1,7 +1,6 @@
 server/node_modules
 server/config.env
 server/config.env.test
-server/vercel
 
 client/node_modules
 client/.pnp
@@ -14,7 +13,6 @@ clientclient/coverage
 /build
 
 # misc
-client/build
 client/.DS_Store
 client/.env.local
 client/.env.development.local
