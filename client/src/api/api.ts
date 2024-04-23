@@ -10,7 +10,7 @@ export const registerRequest = async (formData: {
 }) => {
   try {
       const { data } = await instance.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/register`,
+        `${url}/api/v1/register`,
         {
           ...formData,
         },
@@ -36,7 +36,7 @@ export const loginRequest = async (formData: {
 }) => {
   try {
       const { data } = await instance.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/login`,
+        `${url}/api/v1/login`,
         {
           ...formData,
         },
@@ -59,7 +59,7 @@ export const loginRequest = async (formData: {
 export const logoutRequest = async () => {
   try {
       const { data } = await instance.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/logout`,
+        `${url}/api/v1/logout`,
         {},
         {
           withCredentials: true,

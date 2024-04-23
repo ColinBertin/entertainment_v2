@@ -1,14 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router";
 import ReactDOM from "react-dom/client";
-// import { AuthProvider } from "./auth/AuthContext";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Bookmarks from "./pages/bookmarks/Bookmarks";
-// import ProtectedRoute from "./auth/ProtectedRoutes";
 import Layout from "./pages/layout/Layout";
 import Movies from "./pages/movies/Movies";
 import Series from "./pages/series/Series";
@@ -18,8 +16,6 @@ import OneSeries from "./pages/series/one-series/OneSeries";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AxiosInterceptor from "./api/axiosInterceptor";
-
-// import axios from "axios";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
