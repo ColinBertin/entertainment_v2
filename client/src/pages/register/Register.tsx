@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import logo from "../../logo.svg";
 import Alert from "../../components/Alert";
 import { useMutation } from "@tanstack/react-query";
@@ -8,12 +8,16 @@ import Loading from "../../components/Loading";
 import { registerRequest } from "../../api/api";
 import axios, { AxiosError } from "axios";
 import { FormInput, LoginResponse } from "../../types";
+import FormContainer from "../../components/FormContainer";
 
 export default function Register() {
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [response, setResponse] = useState<LoginResponse>();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [image, setImage] = useState<any>();
+  const [imageBase64, setImageBase64] = useState("");
 
   const {
     register,
@@ -27,6 +31,22 @@ export default function Register() {
       password: "",
     },
   });
+
+  // convert image file to base64
+  const setFileToBase64 = (file: any) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImageBase64(reader.result as SetStateAction<string>);
+    };
+  };
+
+  // receive file from form
+  const handleImage = (e: any) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setFileToBase64(file);
+  };
 
   const handleSuccess = (msg: string) => {
     setOpenDialog(true);
@@ -46,7 +66,8 @@ export default function Register() {
 
   const handleRegister = useMutation({
     mutationFn: (data: FormInput) => {
-      return registerRequest(data);
+      console.log(data);
+      return registerRequest({ ...data, profileImage: image });
     },
     onMutate: async () => {
       setIsLoading(true);
@@ -54,6 +75,7 @@ export default function Register() {
     onSuccess: (data) => {
       setIsLoading(false);
       if (data.success) {
+        sessionStorage.setItem("token", data.token);
         handleSuccess(data.message);
         navigate("/");
       } else {
@@ -75,8 +97,7 @@ export default function Register() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center gap-8 md:gap-16 mx-8">
-      <img className="h-8 md:h-10" src={logo} alt="Logo" />
+    <FormContainer logo={logo}>
       <form
         onSubmit={handleSubmit((data) => {
           handleRegister.mutate(data);
@@ -165,12 +186,24 @@ export default function Register() {
               </span>
             )}
           </div>
-          {/* <button
-                className="bg-gray-50 border-y border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                onClick={togglePassword}
-              >
-                {showPassword ? <BsEyeSlash /> : <BsEye />}
-              </button> */}
+          <div>
+            <label
+              htmlFor="profile_image"
+              className="block font-medium text-deepgray"
+            >
+              Upload image
+            </label>
+
+            <input
+              className="w-full rounded-lg border-gray-200 p-3 text-sm"
+              placeholder="Image"
+              type="file"
+              accept="image/*"
+              id="image"
+              {...register("profileImage")}
+              onChange={handleImage}
+            />
+          </div>
         </div>
         <div className="w-full flex flex-col justify-between">
           <button
@@ -191,6 +224,6 @@ export default function Register() {
         </div>
       </form>
       {openDialog && <Alert response={response as LoginResponse} />}
-    </div>
+    </FormContainer>
   );
 }

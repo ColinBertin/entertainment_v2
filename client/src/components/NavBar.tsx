@@ -36,7 +36,7 @@ export default function NavBar({ logout }: { logout: () => void }) {
           </li>
         ))}
       </ul>
-      <div className="relative">
+      <div className="relative flex">
         <button
           className="self-end"
           onClick={() => setIsMenuOpen((prev) => !prev)}

@@ -27,6 +27,7 @@ export interface FormInput {
   email: string;
   password: string;
   passwordTest: string;
+  profileImage: string
 }
 
 export interface LoginResponse {

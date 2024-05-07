@@ -13,12 +13,13 @@ const AxiosInterceptor: React.FC<{ children: React.ReactNode }> = ({
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
     const resInterceptor = (response: AxiosResponse) => {
       return response;
     };
 
     const errInterceptor = (error: AxiosError) => {
-      if (error.response?.status === 401) {
+      if (!token || error.response?.status === 401) {
         navigate("/login");
       }
 

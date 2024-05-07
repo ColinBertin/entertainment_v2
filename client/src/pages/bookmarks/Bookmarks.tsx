@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import Cards from "../../components/Cards";
 import Loading from "../../components/Loading";
 import { useSearchBarState } from "../../components/SearchBarProvider";
 import { deepSearch } from "../../helpers";
@@ -7,6 +6,9 @@ import { fetchBookmarkedMovies } from "../../api/moviesApi";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBookmarkedSeries } from "../../api/seriesApi";
 import { Movie, Series as SeriesType } from "../../types";
+import Error from "../../components/Error";
+import ContentContainer from "../../components/ContentContainer";
+import Container from "../../components/Container";
 
 export default function Bookmarks() {
   const { filterValue } = useSearchBarState();
@@ -44,16 +46,11 @@ export default function Bookmarks() {
   }
 
   if (bookmarkedMoviesError || bookmarkedSeriesError) {
-    return (
-      <div>
-        <p>Error...{bookmarkedMoviesError?.message}</p>
-        <p>Error...{bookmarkedSeriesError?.message}</p>
-      </div>
-    );
+    return <Error errors={[bookmarkedMoviesError, bookmarkedSeriesError]} />;
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <Container>
       {filteredBookmarkedMovies.length === 0 &&
         filteredBookmarkedSeries.length === 0 && (
           <h2 className="text-xl md:text-3xl font-extralight mt-20 pb-4 md:pb-8 self-start">
@@ -61,23 +58,17 @@ export default function Bookmarks() {
           </h2>
         )}
       {filteredBookmarkedMovies.length > 0 && (
-        <>
-          <h2 className="text-xl md:text-3xl font-extralight pb-4 md:pb-8 self-start">
-            Bookmarked Movies
-          </h2>
-          <Cards contents={filteredBookmarkedMovies as unknown as Movie[]} />
-        </>
+        <ContentContainer
+          title="Bookmarked Movies"
+          contents={filteredBookmarkedMovies as unknown as Movie[]}
+        />
       )}
       {filteredBookmarkedSeries.length > 0 && (
-        <>
-          <h2 className="text-xl md:text-3xl font-extralight py-4 md:py-8 self-start">
-            Bookmarked TV Series
-          </h2>
-          <Cards
-            contents={filteredBookmarkedSeries as unknown as SeriesType[]}
-          />
-        </>
+        <ContentContainer
+          title="Bookmarked TV Series"
+          contents={filteredBookmarkedSeries as unknown as SeriesType[]}
+        />
       )}
-    </div>
+    </Container>
   );
 }

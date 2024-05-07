@@ -5,8 +5,11 @@ const url = process.env.REACT_APP_API_URL;
 // fetch all the movies
 export const fetchMovies = async () => {
   try {
+    const token = await sessionStorage.getItem("token");
     const { data, status } = await instance.get(`${url}/api/v1/movies`, {
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (status === 200) {
       return data;
@@ -21,8 +24,11 @@ export const fetchMovies = async () => {
 // fetch a specific movie
 export const fetchMovie = async (id: string) => {
   try {
+    const token = await sessionStorage.getItem("token");
     const { data, status } = await instance.get(`${url}/api/v1/movies/${id}`, {
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     if (status === 200) {
       return data;
@@ -37,9 +43,14 @@ export const fetchMovie = async (id: string) => {
 // fetch bookmarked movies
 export const fetchBookmarkedMovies = async () => {
   try {
+    const token = await sessionStorage.getItem("token");
     const { data, status } = await instance.get(
       `${url}/api/v1/bookmarks/movies`,
-      { withCredentials: true }
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     if (status === 200) {
       return data;

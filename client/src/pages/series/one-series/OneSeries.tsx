@@ -7,6 +7,7 @@ import { fetchOneSeries } from "../../../api/seriesApi";
 import { Series } from "../../../types";
 import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
 import { bookmarkContent, deleteBookmark } from "../../../api/api";
+import Error from "../../../components/Error";
 
 export default function OneSeries() {
   const { id } = useParams();
@@ -54,7 +55,7 @@ export default function OneSeries() {
   }
 
   if (error) {
-    return <div>Error...{error.message}</div>;
+    return <Error errors={[error]} />;
   }
 
   return (

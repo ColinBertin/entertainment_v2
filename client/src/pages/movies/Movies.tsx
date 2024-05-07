@@ -1,11 +1,13 @@
 import { useMemo } from "react";
-import Cards from "../../components/Cards";
 import Loading from "../../components/Loading";
 import { useSearchBarState } from "../../components/SearchBarProvider";
 import { deepSearch } from "../../helpers";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMovies } from "../../api/moviesApi";
 import { Movie } from "../../types";
+import Error from "../../components/Error";
+import ContentContainer from "../../components/ContentContainer";
+import Container from "../../components/Container";
 
 export default function Movies() {
   const { filterValue } = useSearchBarState();
@@ -25,17 +27,21 @@ export default function Movies() {
   }
 
   if (error) {
-    return <div>Error...{error.message}</div>;
+    return <Error errors={[error]} />;
   }
 
   return (
-    <div className="flex flex-col items-center w-full max-h-60">
-      <h2 className="text-xl md:text-3xl font-extralight pb-4 md:pb-8 self-start">
-        Movies
-      </h2>
+    <>
       {filteredMovies && (
-        <Cards contents={filteredMovies as unknown as Movie[]} />
+        <>
+          <Container>
+            <ContentContainer
+              title="Movies"
+              contents={filteredMovies as unknown as Movie[]}
+            />
+          </Container>
+        </>
       )}
-    </div>
+    </>
   );
 }

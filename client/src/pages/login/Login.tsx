@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom";
-// import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { useForm } from "react-hook-form";
 import Alert from "../../components/Alert";
 import { useState } from "react";
@@ -9,14 +8,13 @@ import { useMutation } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
 import axios, { AxiosError } from "axios";
 import { FormInput, LoginResponse } from "../../types";
+import FormContainer from "../../components/FormContainer";
 
 export default function Login() {
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
   const [response, setResponse] = useState<LoginResponse>();
   const [isLoading, setIsLoading] = useState(false);
-
-  // const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -28,10 +26,6 @@ export default function Login() {
       password: "",
     },
   });
-
-  // const togglePassword = () => {
-  //   setShowPassword(!showPassword);
-  // };
 
   const handleSuccess = (msg: string) => {
     setResponse({ status: true, message: msg });
@@ -59,6 +53,7 @@ export default function Login() {
     onSuccess: (data) => {
       setIsLoading(false);
       if (data.success) {
+        sessionStorage.setItem("token", data.token);
         handleSuccess(data.message);
         navigate("/");
       } else {
@@ -80,8 +75,7 @@ export default function Login() {
   if (isLoading) return <Loading />;
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center gap-8 md:gap-16 mx-8">
-      <img className="h-8 md:h-10" src={logo} alt="Logo" />
+    <FormContainer logo={logo}>
       <form
         onSubmit={handleSubmit((data) => {
           handleLogin.mutate(data);
@@ -128,12 +122,6 @@ export default function Login() {
               </span>
             )}
           </div>
-          {/* <button
-                className="bg-gray-50 border-y border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                onClick={togglePassword}
-              >
-                {showPassword ? <BsEyeSlash /> : <BsEye />}
-              </button> */}
         </div>
         <div className="w-full flex flex-col justify-between">
           <button
@@ -155,6 +143,6 @@ export default function Login() {
         </div>
       </form>
       {openDialog && <Alert response={response as LoginResponse} />}
-    </div>
+    </FormContainer>
   );
 }

@@ -1,11 +1,13 @@
 import { useMemo } from "react";
-import Cards from "../../components/Cards";
 import Loading from "../../components/Loading";
 import { useSearchBarState } from "../../components/SearchBarProvider";
 import { deepSearch } from "../../helpers";
 import { useQuery } from "@tanstack/react-query";
 import { fetchSeries } from "../../api/seriesApi";
 import { Series as SeriesType } from "../../types";
+import Error from "../../components/Error";
+import ContentContainer from "../../components/ContentContainer";
+import Container from "../../components/Container";
 
 export default function Series() {
   const { filterValue } = useSearchBarState();
@@ -25,17 +27,21 @@ export default function Series() {
   }
 
   if (error) {
-    return <div>Error...{error.message}</div>;
+    return <Error errors={[error]} />;
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <h2 className="text-xl md:text-3xl font-extralight pb-4 md:pb-8 self-start">
-        TV Series
-      </h2>
+    <>
       {filteredSeries && (
-        <Cards contents={filteredSeries as unknown as SeriesType[]} />
+        <>
+          <Container>
+            <ContentContainer
+              title="TV Series"
+              contents={filteredSeries as unknown as SeriesType[]}
+            />
+          </Container>
+        </>
       )}
-    </div>
+    </>
   );
 }

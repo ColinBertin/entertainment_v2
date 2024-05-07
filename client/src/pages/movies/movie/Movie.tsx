@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Movie } from "../../../types";
 import { bookmarkContent, deleteBookmark } from "../../../api/api";
 import { MdBookmark, MdBookmarkBorder } from "react-icons/md";
+import Error from "../../../components/Error";
 
 export default function Movies() {
   const { id } = useParams();
@@ -54,7 +55,7 @@ export default function Movies() {
   }
 
   if (error) {
-    return <div>Error...{error.message}</div>;
+    return <Error errors={[error]} />;
   }
 
   return (

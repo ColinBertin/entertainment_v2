@@ -1,5 +1,4 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import NavBar from "../../components/NavBar";
 import { Outlet } from "react-router-dom";
 import SearchBarProvider from "../../components/SearchBarProvider";
@@ -12,14 +11,14 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [, removeCookie] = useCookies(["token"]);
 
   const handleLogout = useMutation({
     mutationFn: logoutRequest,
     onSuccess: (data) => {
       if (data.success) {
+        sessionStorage.removeItem("token");
         navigate("/login");
-        removeCookie("token", "");
+        navigate(0);
         queryClient.invalidateQueries();
         window.location.reload();
         // handleSuccess(data.message);
