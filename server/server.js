@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 require("dotenv").config({ path: "./config.env" });
@@ -8,6 +7,9 @@ const cookieParser = require("cookie-parser");
 const router = require("./router");
 const helmet = require("helmet");
 const path = require("path");
+
+const app = express();
+app.disable("x-powered-by");
 
 mongoose.set("strictQuery", true);
 

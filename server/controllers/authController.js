@@ -2,11 +2,21 @@ const User = require("../models/userModel");
 const { createSecretToken } = require("../utils/secretToken");
 const emailRegex = require("../utils/helpers");
 const bcrypt = require("bcryptjs");
+const { uploadToCloudinary } = require("../utils/cloudinary");
 
 // Handle register
 exports.register = async (req, res) => {
   try {
-    const { email, password, username } = req.body;
+    console.log(req.body);
+    const { email, password, username, profilImage } = req.body;
+
+    let imageData = {};
+    if (profilImage) {
+      const results = await uploadToCloudinary(profilImage, "my-profile");
+      imageData = results;
+    }
+
+    console.log(profilImage);
 
     if (!email || !password || !username) {
       return res.status(400).json({ message: "All fields are required" });
@@ -40,6 +50,7 @@ exports.register = async (req, res) => {
       email,
       username,
       password,
+      profilImage,
     });
 
     // Save the user to the database
@@ -49,16 +60,10 @@ exports.register = async (req, res) => {
       // Generate a token for the user
       const token = createSecretToken(createdUser._id);
 
-      // Return the user information and token
-      res.cookie("token", token, {
-        httpOnly: true, // Cookie can't be accessed by client-side scripts
-        secure: true, // Cookie will only be sent over HTTPS
-        sameSite: "None", // Restricts cookie to same-site requests
-      });
-
       res.status(201).json({
         message: "User signed up successfully!",
         success: true,
+        token,
       });
     }
   } catch (error) {
@@ -99,16 +104,10 @@ exports.login = async (req, res) => {
     // Generate a token for the user
     const token = createSecretToken(user._id);
 
-    // Set the token in a cookie
-    res.cookie("token", token, {
-      httpOnly: true, // Cookie can't be accessed by client-side scripts
-      secure: true, // Cookie will only be sent over HTTPS
-      sameSite: "None", // Restricts cookie to same-site requests
-    });
-
     res.status(200).json({
       message: "User logged in successfully!",
       success: true,
+      token,
     });
   } catch (err) {
     console.error(err);
@@ -120,7 +119,6 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res, next) => {
   try {
     delete req.user;
-    res.clearCookie("token");
 
     res.status(200).json({
       message: "Logout successful!",

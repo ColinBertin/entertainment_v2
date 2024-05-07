@@ -6,14 +6,14 @@ require("dotenv").config({ path: "./config.env" });
 // Middleware to verify user authentication
 exports.userVerification = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    console.log(token);
-    if (!token) {
+    const bearerHeader = req.headers["authorization"];
+    const token = bearerHeader.split(" ")[1] || "";
+
+    if (!token || token === "null") {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
     if (decoded.id) {
       const user = await User.findOne({ _id: new ObjectId(decoded.id) });
       if (user) {
