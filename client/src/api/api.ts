@@ -1,7 +1,5 @@
 import { instance } from "./axiosInterceptor";
 
-const url = process.env.REACT_APP_API_URL;
-
 export const registerRequest = async (formData: {
   username: string;
   email: string;
@@ -19,7 +17,7 @@ export const registerRequest = async (formData: {
     form.append("password", formData.password);
     form.append("passwordTest", formData.passwordTest);
     console.log(form);
-    const { data } = await instance.post(`${url}/api/v1/register`, {
+    const { data } = await instance.post("/api/v1/register", {
      ...form
     });
 
@@ -39,7 +37,7 @@ export const loginRequest = async (formData: {
   password: string;
 }) => {
   try {
-    const { data } = await instance.post(`${url}/api/v1/login`, {
+    const { data } = await instance.post("/api/v1/login", {
       ...formData,
     });
 
@@ -56,7 +54,7 @@ export const loginRequest = async (formData: {
 
 export const logoutRequest = async () => {
   try {
-    const { data } = await instance.post(`${url}/api/v1/logout`);
+    const { data } = await instance.post("/api/v1/logout");
 
     const { success } = data;
 
@@ -79,7 +77,7 @@ export const bookmarkContent = async ({
   try {
     const token = await sessionStorage.getItem("token");
     const { data } = await instance.post(
-      `${url}/api/v1/bookmarks`,
+      "/api/v1/bookmarks",
       {
         contentId,
         contentType,
@@ -111,7 +109,7 @@ export const deleteBookmark = async ({
 }) => {
   try {
     const token = await sessionStorage.getItem("token");
-    const { data } = await instance.delete(`${url}/api/v1/bookmarks`, {
+    const { data } = await instance.delete("/api/v1/bookmarks", {
       data: {
         contentId,
       },

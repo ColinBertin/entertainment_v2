@@ -1,12 +1,10 @@
 import { instance } from "./axiosInterceptor";
 
-const url = process.env.REACT_APP_API_URL;
-
 // fetch all the series
 export const fetchSeries = async () => {
   try {
     const token = await sessionStorage.getItem("token");
-    const { data, status } = await instance.get(`${url}/api/v1/series`, {
+    const { data, status } = await instance.get("/api/v1/series", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -25,7 +23,7 @@ export const fetchSeries = async () => {
 export const fetchOneSeries = async (id: string) => {
   try {
     const token = await sessionStorage.getItem("token");
-    const { data, status } = await instance.get(`${url}/api/v1/series/${id}`, {
+    const { data, status } = await instance.get(`/api/v1/series/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -44,7 +42,7 @@ export const fetchBookmarkedSeries = async () => {
   try {
     const token = await sessionStorage.getItem("token");
     const { data, status } = await instance.get(
-      `${url}/api/v1/bookmarks/series`,
+      "/api/v1/bookmarks/series",
       {
         headers: {
           Authorization: `Bearer ${token}`,
